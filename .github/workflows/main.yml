@@ -1,4 +1,3 @@
-
 name: Build JARVIS APK
 
 on:
@@ -8,6 +7,8 @@ on:
       - main
     paths:
       - 'JARVIS_Android_Project.zip'
+      - 'app/src/main/AndroidManifest.xml'
+      - 'app/src/main/java/com/example/jarvis/JarvisListeningService.kt'
       - '.github/workflows/main.yml'
 
 jobs:
@@ -39,6 +40,16 @@ jobs:
         run: |
           mkdir extracted
           unzip -q JARVIS_Android_Project.zip -d extracted
+
+      - name: Apply updated Android manifest
+        run: |
+          mkdir -p extracted/app/src/main
+          cp app/src/main/AndroidManifest.xml extracted/app/src/main/AndroidManifest.xml
+
+      - name: Add JARVIS listening service
+        run: |
+          mkdir -p extracted/app/src/main/java/com/example/jarvis
+          cp app/src/main/java/com/example/jarvis/JarvisListeningService.kt extracted/app/src/main/java/com/example/jarvis/JarvisListeningService.kt
 
       - name: Align Java and Kotlin targets
         run: |
@@ -76,4 +87,3 @@ jobs:
           name: JARVIS-APK
           path: extracted/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
-          
