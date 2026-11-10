@@ -4,9 +4,11 @@ name: Build JARVIS APK
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - 'JARVIS_Android_Project.zip'
-      - '.github/workflows/android.yml'
+      - '.github/workflows/main.yml'
 
 jobs:
   build:
@@ -21,9 +23,12 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          accept-android-sdk-licenses: true
+          log-accepted-android-sdk-licenses: false
+      
 
       - name: Extract project
         run: |
