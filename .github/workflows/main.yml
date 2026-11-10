@@ -1,3 +1,4 @@
+
 name: Build JARVIS APK
 
 on:
@@ -38,6 +39,32 @@ jobs:
         run: |
           mkdir extracted
           unzip -q JARVIS_Android_Project.zip -d extracted
+
+      - name: Align Java and Kotlin targets
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path("extracted/app/build.gradle.kts")
+          s = p.read_text()
+
+          addition = """
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+              kotlinOptions {
+                  jvmTarget = "17"
+              }
+          """
+
+          if "android {" not in s:
+              raise SystemExit("Android configuration not found")
+
+          s = s.replace("android {", "android {\n" + addition, 1)
+          p.write_text(s)
+          print("Java and Kotlin targets aligned to 17")
+          PY
 
       - name: Build APK
         run: |
