@@ -9,6 +9,7 @@ on:
       - 'JARVIS_Android_Project.zip'
       - 'app/src/main/AndroidManifest.xml'
       - 'app/src/main/java/com/example/jarvis/JarvisListeningService.kt'
+      - 'app/src/main/java/com/example/jarvis/MainActivity.kt'
       - '.github/workflows/main.yml'
 
 jobs:
@@ -31,6 +32,9 @@ jobs:
           accept-android-sdk-licenses: true
           log-accepted-android-sdk-licenses: false
 
+      - name: Set up Android SDK licenses
+        uses: android-actions/setup-android@v4
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -50,6 +54,11 @@ jobs:
         run: |
           mkdir -p extracted/app/src/main/java/com/example/jarvis
           cp app/src/main/java/com/example/jarvis/JarvisListeningService.kt extracted/app/src/main/java/com/example/jarvis/JarvisListeningService.kt
+
+      - name: Add updated JARVIS MainActivity
+        run: |
+          mkdir -p extracted/app/src/main/java/com/example/jarvis
+          cp app/src/main/java/com/example/jarvis/MainActivity.kt extracted/app/src/main/java/com/example/jarvis/MainActivity.kt
 
       - name: Align Java and Kotlin targets
         run: |
