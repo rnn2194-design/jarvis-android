@@ -36,24 +36,19 @@ jobs:
           unzip -q JARVIS_Android_Project.zip -d extracted
           echo "Checking extracted project files:"
           find extracted -maxdepth 6 -type f | head -n 100
+          echo "ROOT GRADLE FILE:"
+          cat extracted/build.gradle.kts
+          echo "APP GRADLE FILE:"
+          cat extracted/app/build.gradle.kts
 
-      - name: Build APK
+      - name: Check Gradle wrapper
         run: |
           GRADLEW=$(find extracted -name gradlew -type f | head -n 1)
-
           if [ -z "$GRADLEW" ]; then
             echo "ERROR: Gradle wrapper not found"
             exit 1
           fi
 
-          PROJECT_DIR=$(dirname "$GRADLEW")
-          cd "$PROJECT_DIR"
-          chmod +x gradlew
-          ./gradlew assembleDebug
-
       - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: JARVIS-APK
-          path: extracted/**/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
+        if: always()
+        run: echo "Waiting for Gradle configuration inspection."
