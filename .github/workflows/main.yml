@@ -1,3 +1,4 @@
+
 name: Build JARVIS APK
 
 on:
@@ -22,15 +23,19 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v4
         with:
           accept-android-sdk-licenses: true
           log-accepted-android-sdk-licenses: false
+
       - name: Extract project
         run: |
           mkdir extracted
           unzip -q JARVIS_Android_Project.zip -d extracted
+          echo "Checking extracted project files:"
+          find extracted -maxdepth 6 -type f | head -n 100
 
       - name: Build APK
         run: |
